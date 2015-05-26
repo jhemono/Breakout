@@ -27,7 +27,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="b1m-Xd-fZj"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="b1m-Xd-fZj">
+                    <connections>
+                        <action selector="panPaddle:" destination="BYZ-38-t0r" id="ePk-yV-Erb"/>
+                    </connections>
+                </panGestureRecognizer>
                 <tapGestureRecognizer id="rTv-lN-opC">
                     <connections>
                         <action selector="pushBall:" destination="BYZ-38-t0r" id="JMY-4h-CGy"/>

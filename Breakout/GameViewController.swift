@@ -24,7 +24,7 @@ class GameViewController: UIViewController {
     
     lazy var paddle: UIView = {
         let gameView = self.gameView!
-        let paddle = UIView(frame: CGRect(x: gameView.frame.midX, y: gameView.frame.maxY - 30, width: 30, height: 10))
+        let paddle = UIView(frame: CGRect(x: gameView.frame.midX, y: gameView.frame.maxY - 30, width: 60, height: 10))
         paddle.backgroundColor = UIColor.orangeColor()
         gameView.addSubview(paddle)
         return paddle
@@ -45,8 +45,15 @@ class GameViewController: UIViewController {
         breakoutBehavior.updatePaddle(Paddle(view: paddle))
         breakoutBehavior.addBall(ball)
     }
+    
     @IBAction func pushBall(sender: UITapGestureRecognizer) {
         breakoutBehavior.pushBall(ball)
+    }
+    
+    @IBAction func panPaddle(sender: UIPanGestureRecognizer) {
+        let x = sender.locationInView(gameView).x
+        paddle.frame.origin.x = min(x, gameView.bounds.maxX - paddle.frame.size.width)
+        breakoutBehavior.updatePaddle(Paddle(view: paddle))
     }
 }
 
