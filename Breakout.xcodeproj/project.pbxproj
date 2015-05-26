@@ -14,6 +14,7 @@
 		866A8AFD1B148A6B000E33BF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 866A8AFB1B148A6B000E33BF /* LaunchScreen.xib */; };
 		866A8B091B148A6B000E33BF /* BreakoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B081B148A6B000E33BF /* BreakoutTests.swift */; };
 		866A8B131B148B95000E33BF /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B121B148B95000E33BF /* GameView.swift */; };
+		866A8B151B149B1C000E33BF /* BreakoutBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		866A8B071B148A6B000E33BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		866A8B081B148A6B000E33BF /* BreakoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutTests.swift; sourceTree = "<group>"; };
 		866A8B121B148B95000E33BF /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBehavior.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				866A8AF41B148A6B000E33BF /* GameViewController.swift */,
+				866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */,
 				866A8B121B148B95000E33BF /* GameView.swift */,
 				866A8AF61B148A6B000E33BF /* Main.storyboard */,
 				866A8AF01B148A6B000E33BF /* Supporting Files */,
@@ -217,6 +220,7 @@
 			files = (
 				866A8AF51B148A6B000E33BF /* GameViewController.swift in Sources */,
 				866A8B131B148B95000E33BF /* GameView.swift in Sources */,
+				866A8B151B149B1C000E33BF /* BreakoutBehavior.swift in Sources */,
 				866A8AF31B148A6B000E33BF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
