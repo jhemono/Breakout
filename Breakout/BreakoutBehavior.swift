@@ -23,7 +23,7 @@ class BreakoutBehavior: UIDynamicBehavior {
     lazy var ballBehavior: UIDynamicItemBehavior = {
         let ballBehavior = UIDynamicItemBehavior()
         ballBehavior.elasticity = 1.0
-        ballBehavior.allowsRotation = true
+        ballBehavior.allowsRotation = false
         return ballBehavior
     }()
     
