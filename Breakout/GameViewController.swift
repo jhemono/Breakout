@@ -22,9 +22,11 @@ class GameViewController: UIViewController {
     
     let breakoutBehavior = BreakoutBehavior()
     
+    let paddleSize = CGSize(width: 60, height: 20)
+    
     lazy var paddle: UIView = {
         let gameView = self.gameView!
-        let paddle = UIView(frame: CGRect(x: gameView.frame.midX, y: gameView.frame.maxY - 30, width: 60, height: 10))
+        let paddle = UIView(frame: CGRect(origin: CGPoint(x: gameView.bounds.midX, y: gameView.bounds.maxY - self.paddleSize.width), size: self.paddleSize))
         paddle.backgroundColor = UIColor.orangeColor()
         gameView.addSubview(paddle)
         return paddle
