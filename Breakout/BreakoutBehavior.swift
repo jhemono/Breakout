@@ -27,10 +27,17 @@ class BreakoutBehavior: UIDynamicBehavior {
         return ballBehavior
     }()
     
+    lazy var gravity: UIGravityBehavior = {
+        let gravity = UIGravityBehavior()
+        gravity.magnitude = 0.3
+        return gravity
+    }()
+    
     override init() {
         super.init()
         addChildBehavior(collider)
         addChildBehavior(ballBehavior)
+        addChildBehavior(gravity)
     }
     
     func addBrick(brick: BoundaryItem) {
@@ -52,6 +59,7 @@ class BreakoutBehavior: UIDynamicBehavior {
         dynamicAnimator?.referenceView?.addSubview(ball)
         ballBehavior.addItem(ball)
         collider.addItem(ball)
+        gravity.addItem(ball)
     }
     
     func pushBall(ball: UIView) {
