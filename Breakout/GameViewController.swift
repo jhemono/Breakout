@@ -36,6 +36,10 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         }
     }
     
+    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballFellOff: UIView) {
+        
+    }
+    
     //MARK: - Physiscs
     
     lazy var animator: UIDynamicAnimator = { UIDynamicAnimator(referenceView: self.gameView!) }()

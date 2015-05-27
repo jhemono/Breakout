@@ -10,6 +10,8 @@ import UIKit
 
 protocol BreakoutBehaviorDelegate {
     func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier indentifier: NSCopying)
+    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballFellOff: UIView)
+
 }
 
 class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
@@ -47,6 +49,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
                 if stringIdentifier == Constants.paddleIdentifier {
                     println("paddlepush")
                     paddlePush?.active = true
+                } else if stringIdentifier == Constants.bottomBoxIdentifier {
+                    removeBall(item as! UIView)
                 }
             }
             hitDelegate?.breakoutBehavior(self, ballHitBoundaryWithIdentifier: identifier)
@@ -61,6 +65,27 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         collider.collisionDelegate = self
         addChildBehavior(ballBehavior)
         addChildBehavior(gravity)
+    }
+    
+    let ballHeight: CGFloat = 20.0
+    
+    override func willMoveToAnimator(dynamicAnimator: UIDynamicAnimator?) {
+        if let frame = dynamicAnimator?.referenceView?.bounds {
+            let topBox = UIBezierPath()
+            let bottomLeft = CGPoint(x: frame.minX, y: frame.maxY)
+            topBox.moveToPoint(bottomLeft)
+            topBox.addLineToPoint(frame.origin)
+            topBox.addLineToPoint(CGPoint(x: frame.maxX, y: frame.minY))
+            topBox.addLineToPoint(CGPoint(x: frame.maxX, y: frame.maxY))
+            collider.addBoundaryWithIdentifier(Constants.topBoxIdentifier, forPath: topBox)
+            
+            let bottomBox = UIBezierPath()
+            bottomBox.moveToPoint(bottomLeft)
+            bottomBox.addLineToPoint(CGPoint(x: frame.minX, y: frame.maxY + ballHeight))
+            bottomBox.addLineToPoint(CGPoint(x: frame.maxX, y: frame.maxY + ballHeight))
+            bottomBox.addLineToPoint(CGPoint(x: frame.maxX, y: frame.maxY))
+            collider.addBoundaryWithIdentifier(Constants.bottomBoxIdentifier, forPath: bottomBox)
+        }
     }
     
     //MARK: - Interface
@@ -103,6 +128,18 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         }
     }
     
+    func removeBall(ball: UIView) {
+        ballBehavior.removeItem(ball)
+        collider.removeItem(ball)
+        gravity.removeItem(ball)
+        paddlePush?.removeItem(ball)
+        tapPush?.removeItem(ball)
+        
+        hitDelegate?.breakoutBehavior(self, ballFellOff: ball)
+        
+        ball.removeFromSuperview()
+    }
+    
     func pushBall(ball: UIView) {
         tapPush?.angle = CGFloat(-M_PI) * CGFloat.randomRatio
         tapPush?.active = true
@@ -114,6 +151,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         static let paddleIdentifier = "Paddle"
         private static let paddlePushMagnitude: CGFloat = 0.25
         private static let tapPushMagnitude: CGFloat = 0.5
+        private static let topBoxIdentifier: String = "TopBox"
+        private static let bottomBoxIdentifier: String = "BottomBox"
     }
 }
 
