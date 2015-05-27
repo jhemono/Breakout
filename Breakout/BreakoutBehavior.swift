@@ -8,51 +8,67 @@
 
 import UIKit
 
-protocol BoundaryItem {
-    var key: String { get }
-    var frame: CGRect { get }
+protocol BreakoutBehaviorDelegate {
+    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier indentifier: NSCopying)
 }
 
-class BreakoutBehavior: UIDynamicBehavior {
-    lazy var collider: UICollisionBehavior = {
+class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
+    private lazy var collider: UICollisionBehavior = {
         let collider = UICollisionBehavior()
         collider.translatesReferenceBoundsIntoBoundary = true
         return collider
     }()
     
-    lazy var ballBehavior: UIDynamicItemBehavior = {
+    private lazy var ballBehavior: UIDynamicItemBehavior = {
         let ballBehavior = UIDynamicItemBehavior()
-        ballBehavior.elasticity = 1.0
+        ballBehavior.elasticity = 0.5
         ballBehavior.allowsRotation = false
         return ballBehavior
     }()
     
-    lazy var gravity: UIGravityBehavior = {
+    private lazy var gravity: UIGravityBehavior = {
         let gravity = UIGravityBehavior()
-        gravity.magnitude = 0.3
+        gravity.magnitude = 1.0
         return gravity
     }()
+    
+    private var paddlePush: UIPushBehavior?
+    
+    func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
+        if let identifier = identifier {
+            if let stringIdentifier = identifier as? String {
+                if stringIdentifier == Constants.PaddleIdentifier {
+                    println("paddlepush")
+                    paddlePush?.active = true
+                }
+            }
+            hitDelegate?.breakoutBehavior(self, ballHitBoundaryWithIdentifier: identifier)
+        }
+    }
+    
+    var hitDelegate: BreakoutBehaviorDelegate?
     
     override init() {
         super.init()
         addChildBehavior(collider)
+        collider.collisionDelegate = self
         addChildBehavior(ballBehavior)
         addChildBehavior(gravity)
     }
     
-    func addBrick(brick: BoundaryItem) {
-        let path = UIBezierPath(rect: brick.frame)
-        collider.addBoundaryWithIdentifier(brick.key, forPath: path)
+    func addBrick(brick: CGRect, forIdentifier key: NSCopying) {
+        let path = UIBezierPath(rect: brick)
+        collider.addBoundaryWithIdentifier(key, forPath: path)
     }
     
-    func updatePaddle(paddle: BoundaryItem) {
-        collider.removeBoundaryWithIdentifier(paddle.key)
-        let path = UIBezierPath(ovalInRect: paddle.frame)
-        collider.addBoundaryWithIdentifier(paddle.key, forPath: path)
+    func removeBrickforIdentifier(key: NSCopying) {
+        collider.removeBoundaryWithIdentifier(key)
     }
     
-    func removeBoundaryItem(boundaryItem: BoundaryItem) {
-        collider.removeBoundaryWithIdentifier(boundaryItem.key)
+    func updatePaddle(paddleRect: CGRect) {
+        collider.removeBoundaryWithIdentifier(Constants.PaddleIdentifier)
+        let path = UIBezierPath(ovalInRect: paddleRect)
+        collider.addBoundaryWithIdentifier(Constants.PaddleIdentifier, forPath: path)
     }
     
     func addBall(ball: UIView) {
@@ -60,6 +76,13 @@ class BreakoutBehavior: UIDynamicBehavior {
         ballBehavior.addItem(ball)
         collider.addItem(ball)
         gravity.addItem(ball)
+        if let pushBehavior = UIPushBehavior(items: [ball], mode: .Instantaneous) {
+            pushBehavior.magnitude = 0.2
+            pushBehavior.angle = CGFloat(-M_PI_2)
+            pushBehavior.active = false
+            addChildBehavior(pushBehavior)
+            paddlePush = pushBehavior
+        }
     }
     
     func pushBall(ball: UIView) {
@@ -71,6 +94,10 @@ class BreakoutBehavior: UIDynamicBehavior {
             }
             dynamicAnimator?.addBehavior(pushBehavior)
         }
+    }
+    
+    private struct Constants {
+        static let PaddleIdentifier = "Paddle"
     }
 }
 

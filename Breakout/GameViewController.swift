@@ -8,13 +8,52 @@
 
 import UIKit
 
-struct Paddle: BoundaryItem {
-    let key = "Paddle"
-    var view: UIView
-    var frame: CGRect { return view.frame }
+struct Grid {
+    var rows: Int
+    var columns: Int
 }
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, BreakoutBehaviorDelegate {
+    
+    let brickGrid = Grid(rows: 3, columns: 5)
+    let spacing: CGFloat = 20
+    let brickHeight: CGFloat = 20
+    
+    var bricks: [Int:UIView] = [:]
+    
+    func makeBricks() {
+        let brickWidth = (gameView!.frame.size.width - (CGFloat(brickGrid.columns + 1) * spacing)) / CGFloat(brickGrid.columns)
+        let brickSize = CGSize(width: brickWidth, height: brickHeight)
+        
+        var counter = 0
+        for i in 0..<brickGrid.rows {
+            let y = spacing + ((spacing + brickHeight) * CGFloat(i))
+            for j in 0..<brickGrid.columns {
+                let x = spacing + ((spacing + brickWidth) * CGFloat(j))
+                let origin = CGPoint(x: x, y: y)
+                let brick = UIView(frame: CGRect(origin: origin, size: brickSize))
+                brick.backgroundColor = UIColor.blackColor()
+                breakoutBehavior.addBrick(brick.frame, forIdentifier: counter)
+                gameView!.addSubview(brick)
+                bricks[counter] = brick
+                counter++
+            }
+        }
+    }
+    
+    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier identifier: NSCopying) {
+        if let counter = identifier as? Int {
+            if let brick = bricks[counter] {
+                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                    brick.alpha = CGFloat(0.0)
+                    brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.25, 0.25)
+                }, completion: { (bool) -> Void in
+                    brick.removeFromSuperview()
+                })
+                breakoutBehavior.removeBrickforIdentifier(counter)
+            }
+        }
+    }
     
     @IBOutlet weak var gameView: GameView!
     
@@ -22,19 +61,27 @@ class GameViewController: UIViewController {
     
     let breakoutBehavior = BreakoutBehavior()
     
-    let paddleSize = CGSize(width: 60, height: 20)
+    let paddleSize = CGSize(width: 60, height: 30)
+    
+    let distanceFromPaddleToBottom:CGFloat = 60.0
     
     lazy var paddle: UIView = {
         let gameView = self.gameView!
-        let paddle = UIView(frame: CGRect(origin: CGPoint(x: gameView.bounds.midX, y: gameView.bounds.maxY - self.paddleSize.width), size: self.paddleSize))
+        let paddle = UIView()
+        paddle.center = CGPoint(x: gameView.bounds.midX, y: gameView.bounds.maxY - self.distanceFromPaddleToBottom)
+        paddle.frame.size = self.paddleSize
         paddle.backgroundColor = UIColor.orangeColor()
         gameView.addSubview(paddle)
         return paddle
     }()
     
+    let ballSize = CGSize(width: 20.0, height: 20.0)
+    
     lazy var ball: UIView = {
         let paddle = self.paddle
-        let ball = UIView(frame: CGRect(x: paddle.frame.midX, y: paddle.frame.minY-20.0, width: 20.0, height: 20.0))
+        let ball = UIView()
+        ball.center = CGPoint(x: paddle.frame.midX, y: paddle.frame.minY - self.ballSize.height)
+        ball.frame.size = self.ballSize
         ball.backgroundColor = UIColor.purpleColor()
         return ball
     }()
@@ -42,10 +89,12 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        breakoutBehavior.hitDelegate = self
         animator.addBehavior(breakoutBehavior)
         
-        breakoutBehavior.updatePaddle(Paddle(view: paddle))
+        breakoutBehavior.updatePaddle(paddle.frame)
         breakoutBehavior.addBall(ball)
+        makeBricks()
     }
     
     @IBAction func pushBall(sender: UITapGestureRecognizer) {
@@ -54,8 +103,8 @@ class GameViewController: UIViewController {
     
     @IBAction func panPaddle(sender: UIPanGestureRecognizer) {
         let x = sender.locationInView(gameView).x
-        paddle.frame.origin.x = min(x, gameView.bounds.maxX - paddle.frame.size.width)
-        breakoutBehavior.updatePaddle(Paddle(view: paddle))
+        paddle.center.x = x
+        breakoutBehavior.updatePaddle(paddle.frame)
     }
 }
 
