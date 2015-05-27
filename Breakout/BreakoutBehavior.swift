@@ -34,6 +34,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     private var paddlePush: UIPushBehavior?
     
+    private var tapPush: UIPushBehavior?
+    
     func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
         if let identifier = identifier {
             if let stringIdentifier = identifier as? String {
@@ -73,27 +75,30 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     func addBall(ball: UIView) {
         dynamicAnimator?.referenceView?.addSubview(ball)
+        
         ballBehavior.addItem(ball)
         collider.addItem(ball)
         gravity.addItem(ball)
-        if let pushBehavior = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            pushBehavior.magnitude = 0.2
-            pushBehavior.angle = CGFloat(-M_PI_2)
-            pushBehavior.active = false
-            addChildBehavior(pushBehavior)
-            paddlePush = pushBehavior
+        
+        if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
+            push.magnitude = 0.25
+            push.angle = CGFloat(-M_PI_2)
+            push.active = false
+            addChildBehavior(push)
+            paddlePush = push
+        }
+        
+        if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
+            push.magnitude = 0.5
+            push.active = false
+            addChildBehavior(push)
+            tapPush = push
         }
     }
     
     func pushBall(ball: UIView) {
-        if let pushBehavior = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            pushBehavior.magnitude = CGFloat.randomRatio
-            pushBehavior.angle = CGFloat(2 * M_PI) * CGFloat.randomRatio
-            pushBehavior.action = { [unowned pushBehavior] in
-                pushBehavior.dynamicAnimator?.removeBehavior(pushBehavior)
-            }
-            dynamicAnimator?.addBehavior(pushBehavior)
-        }
+        tapPush?.angle = CGFloat(-M_PI) * CGFloat.randomRatio
+        tapPush?.active = true
     }
     
     private struct Constants {
