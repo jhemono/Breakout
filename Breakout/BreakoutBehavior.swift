@@ -13,6 +13,9 @@ protocol BreakoutBehaviorDelegate {
 }
 
 class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
+    
+    //MARK: - Dynamic Behaviors
+    
     private lazy var collider: UICollisionBehavior = {
         let collider = UICollisionBehavior()
         collider.translatesReferenceBoundsIntoBoundary = true
@@ -36,6 +39,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     private var tapPush: UIPushBehavior?
     
+    //MARK: - UICollisionBehaviorDelegate
+    
     func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
         if let identifier = identifier {
             if let stringIdentifier = identifier as? String {
@@ -57,6 +62,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         addChildBehavior(ballBehavior)
         addChildBehavior(gravity)
     }
+    
+    //MARK: - Interface
     
     func addBrick(brick: CGRect, forIdentifier key: NSCopying) {
         let path = UIBezierPath(rect: brick)
@@ -100,6 +107,8 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         tapPush?.angle = CGFloat(-M_PI) * CGFloat.randomRatio
         tapPush?.active = true
     }
+    
+    //MARK: Constants
     
     struct Constants {
         static let paddleIdentifier = "Paddle"

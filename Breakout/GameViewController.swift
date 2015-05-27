@@ -15,11 +15,40 @@ struct Grid {
 
 class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
+    @IBOutlet weak var gameView: GameView!
+    
+    //MARK: - BreakoutBehaviorDelegate
+    
+    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier identifier: NSCopying) {
+        if let counter = identifier as? Int {
+            if let brick = bricks[counter] {
+                UIView.animateWithDuration(0.25, delay: 0.0,
+                    options: UIViewAnimationOptions.CurveEaseInOut,
+                    animations: { () -> Void in
+                        brick.alpha = CGFloat(0.0)
+                        brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.1, 0.1)
+                    },
+                    completion: { (bool) -> Void in
+                        brick.removeFromSuperview()
+                    })
+                breakoutBehavior.removeBrickforIdentifier(counter)
+            }
+        }
+    }
+    
+    //MARK: - Physiscs
+    
+    lazy var animator: UIDynamicAnimator = { UIDynamicAnimator(referenceView: self.gameView!) }()
+    
+    let breakoutBehavior = BreakoutBehavior()
+    
+    //MARK: - Objects
+    
+    //MARK: Bricks
+    
     let brickGrid = Grid(rows: 3, columns: 5)
     let spacing: CGFloat = 20
     let brickHeight: CGFloat = 20
-    
-    var bricks: [Int:UIView] = [:]
     
     func makeBricks() {
         let brickWidth = (gameView!.frame.size.width - (CGFloat(brickGrid.columns + 1) * spacing)) / CGFloat(brickGrid.columns)
@@ -41,25 +70,9 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         }
     }
     
-    func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier identifier: NSCopying) {
-        if let counter = identifier as? Int {
-            if let brick = bricks[counter] {
-                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-                    brick.alpha = CGFloat(0.0)
-                    brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.1, 0.1)
-                }, completion: { (bool) -> Void in
-                    brick.removeFromSuperview()
-                })
-                breakoutBehavior.removeBrickforIdentifier(counter)
-            }
-        }
-    }
+    var bricks: [Int:UIView] = [:]
     
-    @IBOutlet weak var gameView: GameView!
-    
-    lazy var animator: UIDynamicAnimator = { UIDynamicAnimator(referenceView: self.gameView!) }()
-    
-    let breakoutBehavior = BreakoutBehavior()
+    //MARK: Paddle
     
     let paddleSize = CGSize(width: 60, height: 30)
     
@@ -75,6 +88,8 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         return paddle
     }()
     
+    //MARK: Ball
+    
     let ballSize = CGSize(width: 20.0, height: 20.0)
     
     lazy var ball: UIView = {
@@ -86,6 +101,8 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         return ball
     }()
     
+    //MARK: - Lifecyle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,6 +113,8 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         breakoutBehavior.addBall(ball)
         makeBricks()
     }
+    
+    //MARK: - Gestures
     
     @IBAction func pushBall(sender: UITapGestureRecognizer) {
         breakoutBehavior.pushBall(ball)
