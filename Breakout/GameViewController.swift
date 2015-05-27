@@ -22,22 +22,33 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballHitBoundaryWithIdentifier identifier: NSCopying) {
         if let counter = identifier as? Int {
             if let brick = bricks[counter] {
-                UIView.animateWithDuration(0.25, delay: 0.0,
-                    options: UIViewAnimationOptions.CurveEaseInOut,
-                    animations: { () -> Void in
-                        brick.alpha = CGFloat(0.0)
-                        brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.1, 0.1)
-                    },
-                    completion: { (bool) -> Void in
-                        brick.removeFromSuperview()
-                    })
-                breakoutBehavior.removeBrickforIdentifier(counter)
+                removeBrickWithCounter(counter, animated: true)
+                if isEmpty(bricks) {
+                    let alert = UIAlertController(title: "You win!", message: "You broke all the bricks and finished with a score of 1234.", preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "Start over", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                        self.makeBricks()
+                        self.ballNumber = 0
+                    }))
+                    presentViewController(alert, animated: true, completion: nil)
+                }
             }
         }
     }
     
     func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballFellOff: UIView) {
         makeBall()
+        ballNumber++
+        if ballNumber >= numberOfTries {
+            let alert = UIAlertController(title: "Game over", message: nil, preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Try again", style: .Default, handler: { (_) -> Void in
+                for (counter, _) in self.bricks {
+                    self.removeBrickWithCounter(counter, animated: false)
+                }
+                self.makeBricks()
+                self.ballNumber = 0
+            }))
+            presentViewController(alert, animated: true, completion: nil)
+        }
     }
     
     //MARK: - Physiscs
@@ -70,6 +81,26 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         }
     }
     
+    private func removeBrickWithCounter(counter: Int, animated: Bool) {
+        if let brick = bricks[counter] {
+            if animated {
+                UIView.animateWithDuration(0.25, delay: 0.0,
+                    options: UIViewAnimationOptions.CurveEaseInOut,
+                    animations: { () -> Void in
+                        brick.alpha = CGFloat(0.0)
+                        brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.1, 0.1)
+                    },
+                    completion: { (bool) -> Void in
+                        brick.removeFromSuperview()
+                })
+            } else {
+                brick.removeFromSuperview()
+            }
+            breakoutBehavior.removeBrickforIdentifier(counter)
+            bricks[counter] = nil
+        }
+    }
+    
     var bricks: [Int:UIView] = [:]
     
     //MARK: Paddle
@@ -85,6 +116,9 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     }()
     
     //MARK: Ball
+    
+    let numberOfTries = 3
+    var ballNumber = 0
     
     func makeBall() -> UIView {
         let paddle = self.paddle
