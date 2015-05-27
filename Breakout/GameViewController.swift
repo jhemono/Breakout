@@ -37,7 +37,7 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     }
     
     func breakoutBehavior(breakoutBehavior: BreakoutBehavior, ballFellOff: UIView) {
-        
+        makeBall()
     }
     
     //MARK: - Physiscs
@@ -86,14 +86,17 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     //MARK: Ball
     
-    lazy var ball: UIView = {
+    func makeBall() -> UIView {
         let paddle = self.paddle
         let ball = UIView()
         ball.center = CGPoint(x: paddle.frame.midX, y: paddle.frame.minY - Constants.ballSize.height)
         ball.frame.size = Constants.ballSize
         ball.backgroundColor = UIColor.purpleColor()
+        breakoutBehavior.addBall(ball)
         return ball
-    }()
+    }
+    
+    lazy var ball: UIView = makeBall(self)()
     
     //MARK: - Lifecyle
     
@@ -104,7 +107,6 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         animator.addBehavior(breakoutBehavior)
         
         breakoutBehavior.updatePaddle(paddle.frame)
-        breakoutBehavior.addBall(ball)
         makeBricks()
     }
     
