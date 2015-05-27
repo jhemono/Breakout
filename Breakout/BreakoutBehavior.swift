@@ -39,7 +39,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
         if let identifier = identifier {
             if let stringIdentifier = identifier as? String {
-                if stringIdentifier == Constants.PaddleIdentifier {
+                if stringIdentifier == Constants.paddleIdentifier {
                     println("paddlepush")
                     paddlePush?.active = true
                 }
@@ -68,9 +68,9 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     }
     
     func updatePaddle(paddleRect: CGRect) {
-        collider.removeBoundaryWithIdentifier(Constants.PaddleIdentifier)
+        collider.removeBoundaryWithIdentifier(Constants.paddleIdentifier)
         let path = UIBezierPath(ovalInRect: paddleRect)
-        collider.addBoundaryWithIdentifier(Constants.PaddleIdentifier, forPath: path)
+        collider.addBoundaryWithIdentifier(Constants.paddleIdentifier, forPath: path)
     }
     
     func addBall(ball: UIView) {
@@ -81,7 +81,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         gravity.addItem(ball)
         
         if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            push.magnitude = 0.25
+            push.magnitude = Constants.paddlePushMagnitude
             push.angle = CGFloat(-M_PI_2)
             push.active = false
             addChildBehavior(push)
@@ -89,7 +89,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         }
         
         if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            push.magnitude = 0.5
+            push.magnitude = Constants.tapPushMagnitude
             push.active = false
             addChildBehavior(push)
             tapPush = push
@@ -102,7 +102,9 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     }
     
     private struct Constants {
-        static let PaddleIdentifier = "Paddle"
+        static let paddleIdentifier = "Paddle"
+        static let paddlePushMagnitude: CGFloat = 0.25
+        static let tapPushMagnitude: CGFloat = 0.5
     }
 }
 
