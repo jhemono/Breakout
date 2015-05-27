@@ -20,7 +20,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     private lazy var collider: UICollisionBehavior = {
         let collider = UICollisionBehavior()
-        collider.translatesReferenceBoundsIntoBoundary = true
+        collider.translatesReferenceBoundsIntoBoundary = false
         return collider
     }()
     
