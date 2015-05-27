@@ -101,10 +101,10 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         tapPush?.active = true
     }
     
-    private struct Constants {
+    struct Constants {
         static let paddleIdentifier = "Paddle"
-        static let paddlePushMagnitude: CGFloat = 0.25
-        static let tapPushMagnitude: CGFloat = 0.5
+        private static let paddlePushMagnitude: CGFloat = 0.25
+        private static let tapPushMagnitude: CGFloat = 0.5
     }
 }
 

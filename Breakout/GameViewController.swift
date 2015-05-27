@@ -46,7 +46,7 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
             if let brick = bricks[counter] {
                 UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                     brick.alpha = CGFloat(0.0)
-                    brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.25, 0.25)
+                    brick.transform = CGAffineTransformScale(CGAffineTransformRotate(brick.transform, CGFloat(M_PI_4)), 0.1, 0.1)
                 }, completion: { (bool) -> Void in
                     brick.removeFromSuperview()
                 })
