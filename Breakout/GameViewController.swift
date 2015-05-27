@@ -46,19 +46,15 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     //MARK: Bricks
     
-    let brickGrid = Grid(rows: 3, columns: 5)
-    let spacing: CGFloat = 20
-    let brickHeight: CGFloat = 20
-    
     func makeBricks() {
-        let brickWidth = (gameView!.frame.size.width - (CGFloat(brickGrid.columns + 1) * spacing)) / CGFloat(brickGrid.columns)
-        let brickSize = CGSize(width: brickWidth, height: brickHeight)
+        let brickWidth = (gameView!.frame.size.width - (CGFloat(Constants.brickGrid.columns + 1) * Constants.spacing)) / CGFloat(Constants.brickGrid.columns)
+        let brickSize = CGSize(width: brickWidth, height: Constants.brickHeight)
         
         var counter = 0
-        for i in 0..<brickGrid.rows {
-            let y = spacing + ((spacing + brickHeight) * CGFloat(i))
-            for j in 0..<brickGrid.columns {
-                let x = spacing + ((spacing + brickWidth) * CGFloat(j))
+        for i in 0..<Constants.brickGrid.rows {
+            let y = Constants.spacing + ((Constants.spacing + Constants.brickHeight) * CGFloat(i))
+            for j in 0..<Constants.brickGrid.columns {
+                let x = Constants.spacing + ((Constants.spacing + brickWidth) * CGFloat(j))
                 let origin = CGPoint(x: x, y: y)
                 let brick = UIView(frame: CGRect(origin: origin, size: brickSize))
                 brick.backgroundColor = UIColor.blackColor()
@@ -74,15 +70,11 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     //MARK: Paddle
     
-    let paddleSize = CGSize(width: 60, height: 30)
-    
-    let distanceFromPaddleToBottom:CGFloat = 60.0
-    
     lazy var paddle: UIView = {
         let gameView = self.gameView!
         let paddle = UIView()
-        paddle.center = CGPoint(x: gameView.bounds.midX, y: gameView.bounds.maxY - self.distanceFromPaddleToBottom)
-        paddle.frame.size = self.paddleSize
+        paddle.center = CGPoint(x: gameView.bounds.midX, y: gameView.bounds.maxY - Constants.distanceFromPaddleToBottom)
+        paddle.frame.size = Constants.paddleSize
         paddle.backgroundColor = UIColor.orangeColor()
         gameView.addSubview(paddle)
         return paddle
@@ -90,13 +82,11 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     //MARK: Ball
     
-    let ballSize = CGSize(width: 20.0, height: 20.0)
-    
     lazy var ball: UIView = {
         let paddle = self.paddle
         let ball = UIView()
-        ball.center = CGPoint(x: paddle.frame.midX, y: paddle.frame.minY - self.ballSize.height)
-        ball.frame.size = self.ballSize
+        ball.center = CGPoint(x: paddle.frame.midX, y: paddle.frame.minY - Constants.ballSize.height)
+        ball.frame.size = Constants.ballSize
         ball.backgroundColor = UIColor.purpleColor()
         return ball
     }()
@@ -124,6 +114,17 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         let x = sender.locationInView(gameView).x
         paddle.center.x = x
         breakoutBehavior.updatePaddle(paddle.frame)
+    }
+    
+    //MARK: - Constants
+    
+    private struct Constants {
+        static let brickGrid = Grid(rows: 3, columns: 5)
+        static let spacing: CGFloat = 20
+        static let brickHeight: CGFloat = 20
+        static let paddleSize = CGSize(width: 60, height: 30)
+        static let distanceFromPaddleToBottom:CGFloat = 60.0
+        static let ballSize = CGSize(width: 20.0, height: 20.0)
     }
 }
 
