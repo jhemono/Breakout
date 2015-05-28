@@ -13,7 +13,6 @@
 		866A8AFA1B148A6B000E33BF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 866A8AF91B148A6B000E33BF /* Images.xcassets */; };
 		866A8AFD1B148A6B000E33BF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 866A8AFB1B148A6B000E33BF /* LaunchScreen.xib */; };
 		866A8B091B148A6B000E33BF /* BreakoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B081B148A6B000E33BF /* BreakoutTests.swift */; };
-		866A8B131B148B95000E33BF /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B121B148B95000E33BF /* GameView.swift */; };
 		866A8B151B149B1C000E33BF /* BreakoutBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,7 +37,6 @@
 		866A8B021B148A6B000E33BF /* BreakoutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreakoutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		866A8B071B148A6B000E33BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		866A8B081B148A6B000E33BF /* BreakoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutTests.swift; sourceTree = "<group>"; };
-		866A8B121B148B95000E33BF /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBehavior.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,7 +81,6 @@
 			children = (
 				866A8AF41B148A6B000E33BF /* GameViewController.swift */,
 				866A8B141B149B1C000E33BF /* BreakoutBehavior.swift */,
-				866A8B121B148B95000E33BF /* GameView.swift */,
 				866A8AF61B148A6B000E33BF /* Main.storyboard */,
 				866A8AF01B148A6B000E33BF /* Supporting Files */,
 			);
@@ -219,7 +216,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				866A8AF51B148A6B000E33BF /* GameViewController.swift in Sources */,
-				866A8B131B148B95000E33BF /* GameView.swift in Sources */,
 				866A8B151B149B1C000E33BF /* BreakoutBehavior.swift in Sources */,
 				866A8AF31B148A6B000E33BF /* AppDelegate.swift in Sources */,
 			);
@@ -419,6 +415,7 @@
 				866A8B0E1B148A6B000E33BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		866A8B0F1B148A6B000E33BF /* Build configuration list for PBXNativeTarget "BreakoutTests" */ = {
 			isa = XCConfigurationList;
@@ -427,6 +424,7 @@
 				866A8B111B148A6B000E33BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

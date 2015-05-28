@@ -15,7 +15,19 @@ struct Grid {
 
 class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
-    @IBOutlet weak var gameView: GameView!
+    @IBOutlet weak var gameView: UIView!
+    @IBOutlet weak var ballsLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
+    
+    //MARK: - Display
+    
+    func updateBallsLabel() {
+        ballsLabel.text = "Ball \(ballNumber + 1)/\(numberOfTries)"
+    }
+    
+    func upDateScoreLabel() {
+        scoreLabel.text = "Score: \(score)"
+    }
     
     //MARK: - BreakoutBehaviorDelegate
     
@@ -23,14 +35,18 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         if let counter = identifier as? Int {
             if let brick = bricks[counter] {
                 removeBrickWithCounter(counter, animated: true)
+                score += 10
                 if isEmpty(bricks) {
-                    let alert = UIAlertController(title: "You win!", message: "You broke all the bricks and finished with a score of 1234.", preferredStyle: .Alert)
+                    let alert = UIAlertController(title: "You win!", message: "You broke all the bricks and finished with a score of \(score).", preferredStyle: .Alert)
                     alert.addAction(UIAlertAction(title: "Start over", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                        self.makeBricks()
-                        self.ballNumber = 0
+                        self.resetGame()
                     }))
                     presentViewController(alert, animated: true, completion: nil)
                 }
+            }
+        } else if let name = identifier as? String {
+            if name == BreakoutBehavior.Constants.paddleIdentifier {
+                score -= 1
             }
         }
     }
@@ -41,11 +57,7 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         if ballNumber >= numberOfTries {
             let alert = UIAlertController(title: "Game over", message: nil, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Try again", style: .Default, handler: { (_) -> Void in
-                for (counter, _) in self.bricks {
-                    self.removeBrickWithCounter(counter, animated: false)
-                }
-                self.makeBricks()
-                self.ballNumber = 0
+                self.resetGame()
             }))
             presentViewController(alert, animated: true, completion: nil)
         }
@@ -118,7 +130,9 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     //MARK: Ball
     
     let numberOfTries = 3
-    var ballNumber = 0
+    var ballNumber = 0 {
+        didSet { updateBallsLabel() }
+    }
     
     func makeBall() -> UIView {
         let paddle = self.paddle
@@ -132,6 +146,21 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     lazy var ball: UIView = makeBall(self)()
     
+    //MARK: - GamePlay
+    
+    var score = 0 {
+        didSet { upDateScoreLabel() }
+    }
+    
+    func resetGame() {
+        for (counter, _) in bricks {
+            removeBrickWithCounter(counter, animated: false)
+        }
+        makeBricks()
+        ballNumber = 0
+        score = 0
+    }
+    
     //MARK: - Lifecyle
     
     override func viewDidLoad() {
@@ -142,6 +171,8 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
         
         breakoutBehavior.updatePaddle(paddle.frame)
         makeBricks()
+        updateBallsLabel()
+        upDateScoreLabel()
     }
     
     //MARK: - Gestures
@@ -160,7 +191,7 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     private struct Constants {
         static let brickGrid = Grid(rows: 3, columns: 5)
-        static let spacing: CGFloat = 20
+        static let spacing: CGFloat = 21
         static let brickHeight: CGFloat = 20
         static let paddleSize = CGSize(width: 60, height: 30)
         static let distanceFromPaddleToBottom:CGFloat = 60.0
