@@ -163,8 +163,8 @@ class GameViewController: UIViewController, BreakoutBehaviorDelegate {
     
     //MARK: - Lifecyle
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
         breakoutBehavior.hitDelegate = self
         animator.addBehavior(breakoutBehavior)
