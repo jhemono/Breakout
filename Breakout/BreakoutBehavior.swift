@@ -47,7 +47,7 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         if let identifier = identifier {
             if let stringIdentifier = identifier as? String {
                 if stringIdentifier == Constants.paddleIdentifier {
-                    println("paddlepush")
+                    print("paddlepush")
                     paddlePush?.active = true
                 } else if stringIdentifier == Constants.bottomBoxIdentifier {
                     removeBall(item as! UIView)
@@ -112,20 +112,18 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
         collider.addItem(ball)
         gravity.addItem(ball)
         
-        if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            push.magnitude = Constants.paddlePushMagnitude
-            push.angle = CGFloat(-M_PI_2)
-            push.active = false
-            addChildBehavior(push)
-            paddlePush = push
-        }
+        let push = UIPushBehavior(items: [ball], mode: .Instantaneous)
+        push.magnitude = Constants.paddlePushMagnitude
+        push.angle = CGFloat(-M_PI_2)
+        push.active = false
+        addChildBehavior(push)
+        paddlePush = push
         
-        if let push = UIPushBehavior(items: [ball], mode: .Instantaneous) {
-            push.magnitude = Constants.tapPushMagnitude
-            push.active = false
-            addChildBehavior(push)
-            tapPush = push
-        }
+        let tpush = UIPushBehavior(items: [ball], mode: .Instantaneous)
+        tpush.magnitude = Constants.tapPushMagnitude
+        tpush.active = false
+        addChildBehavior(tpush)
+        tapPush = push
     }
     
     func removeBall(ball: UIView) {
