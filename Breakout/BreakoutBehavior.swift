@@ -26,7 +26,9 @@ class BreakoutBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     private lazy var ballBehavior: UIDynamicItemBehavior = {
         let ballBehavior = UIDynamicItemBehavior()
-        ballBehavior.elasticity = 0.5
+        ballBehavior.elasticity = 1
+        ballBehavior.friction = 0
+        ballBehavior.resistance = 0
         ballBehavior.allowsRotation = false
         return ballBehavior
     }()
